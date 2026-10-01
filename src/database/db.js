@@ -1,0 +1,7 @@
+[
+  {
+    id: 1,
+    name: "Smart phone",
+    price: 50000,
+  },
+];
