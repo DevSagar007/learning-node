@@ -1,5 +1,5 @@
 import { createServer, IncomingMessage, Server } from "http";
-import { productController } from "./routes/product.controller";
+import { productController } from "./controller/product.controller";
 
 const server: Server = createServer((req: IncomingMessage, res) => {
     // console.log(req.url); // 'user', '/product'
