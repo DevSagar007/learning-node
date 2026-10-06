@@ -101,8 +101,9 @@ export const productController = async (
     }
     // delete single product
     else if (method === "DELETE" && id !== null) {
-        const products = readProduct()
-        const index = products.find((p:IProduct)=> p.id === id)
+        const products = readProduct();
+        const index = products.findIndex((p: IProduct) => p.id === id);
+
         if (index < 0) {
             res.writeHead(404, { "content-type": "application/json" });
             res.end(
@@ -111,10 +112,11 @@ export const productController = async (
                     data: null,
                 }),
             );
+            return;
         }
-        products.splice(index, 1)
-        // console.log(products);
-        insertProduct(products)
+
+        products.splice(index, 1);
+        insertProduct(products);
         res.writeHead(200, { "content-type": "application/json" });
         res.end(JSON.stringify({
             message: "Product deleted successfully",
