@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from "http";
 import { insertProduct, readProduct } from "../service/product.service";
 import type { IProduct } from "../types/product.type";
 import { parseBody } from "../utility/parseBody";
+import { sendResponse } from "../utility/sendResponse";
 
 export const productController = async (
     req: IncomingMessage,
@@ -24,12 +25,13 @@ export const productController = async (
         //     id: 1,
         //     product: "Smart Watch"
         // }];
-        const products = readProduct();
-        res.writeHead(200, { "content-type": "application/json" });
-        res.end(
-            JSON.stringify({ message: "Product retrive successful", data: products }),
-        );
+        try {
+            const products = readProduct();
+            return sendResponse(res, 200, true, "Product retrive successful", products)
 
+        } catch (error) {
+            return sendResponse(res, 500, false, "Something went wrong!", error)
+        }
     }
     // Get single product
     else if (method === "GET" && id !== null) {
@@ -37,18 +39,15 @@ export const productController = async (
         // get single product id
         const product = products.find((p: IProduct) => p.id === id);
         // console.log(product);
-
-        if (!product) {
-            res.writeHead(404, { "content-type": "application/json" });
-            res.end(
-                JSON.stringify({ message: "Products not found", data: product }),
-            );
+        try {
+            if (!product) {
+                return sendResponse(res, 404, false, "Products not found")
+            }
+            return sendResponse(res, 200, false, "Products retrive successful!")
+        } catch (error) {
+            return sendResponse(res, 500, false, "Something went wrong!", error)
         }
 
-        res.writeHead(200, { "content-type": "application/json" });
-        res.end(
-            JSON.stringify({ message: "Products retrive successful", data: product }),
-        );
     } else if (method === "POST" && url === "/products") {
         const body = await parseBody(req);
         const products = readProduct();
@@ -122,5 +121,5 @@ export const productController = async (
             message: "Product deleted successfully",
             data: null,
         }))
-    } 
+    }
 };
