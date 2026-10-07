@@ -1,5 +1,6 @@
 import { createServer, IncomingMessage, Server } from "http";
 import { productController } from "./controller/product.controller";
+import config from "./config";
 
 const server: Server = createServer((req: IncomingMessage, res) => {
     // console.log(req.url); // 'user', '/product'
@@ -19,6 +20,6 @@ const server: Server = createServer((req: IncomingMessage, res) => {
     }
 });
 
-server.listen(5000, () => {
-    console.log("Server is running on the port 500");
+server.listen(config.port, () => {
+    console.log(`Server is running on the port ${config.port}`);
 });
